@@ -1,0 +1,42 @@
+<svg width="720" height="390" viewBox="0 0 720 390" xmlns="http://www.w3.org/2000/svg" font-family="'Cascadia Code','Fira Code','Courier New',monospace">
+  <rect width="720" height="390" rx="10" fill="#090912"/>
+  <rect width="720" height="36" rx="10" fill="#0f0f20"/>
+  <rect y="20" width="720" height="16" fill="#0f0f20"/>
+  <circle cx="18" cy="18" r="6" fill="#ff5f56"/>
+  <circle cx="38" cy="18" r="6" fill="#ffbd2e"/>
+  <circle cx="58" cy="18" r="6" fill="#27c93f"/>
+  <text x="360" y="23" fill="#555" font-size="12" text-anchor="middle">nova — airdrop optimizer</text>
+
+  <text x="20" y="58" fill="#444" font-size="12">$</text>
+  <text x="32" y="58" fill="#e0e0e0" font-size="12">bun run dev</text>
+
+  <text x="20" y="78" fill="#555" font-size="11">[2026-04-03T09:00:00Z] [INFO] [nova] Nova starting...</text>
+  <text x="20" y="93" fill="#555" font-size="11">[2026-04-03T09:00:00Z] [INFO] [nova] Capital: $5,000 | Min ROI: 1.5x | Refresh: 24h</text>
+  <text x="20" y="108" fill="#666" font-size="11">[2026-04-03T09:00:00Z] [INFO] [nova] ─── Farming plan refresh ─────────────────────────</text>
+
+  <text x="20" y="128" fill="#aaa" font-size="11">[2026-04-03T09:00:01Z] [INFO] [nova] Found 5 active campaigns</text>
+
+  <text x="20" y="150" fill="#555" font-size="11">[2026-04-03T09:00:05Z] [INFO] [portfolio] Plan applied: 5 campaigns | expected $18,360</text>
+
+  <text x="20" y="170" fill="#f59e0b" font-size="11">[2026-04-03T09:00:05Z] [INFO] [portfolio]   [HIGH] Kamino Finance | $1,500 → est $7,200 (4.8x) | Season 2, largest Solana lending TVL</text>
+  <text x="20" y="185" fill="#f59e0b" font-size="11">[2026-04-03T09:00:05Z] [INFO] [portfolio]   [HIGH] MarginFi | $1,200 → est $4,320 (3.6x) | mrgnPTS accumulation, TGE pending</text>
+  <text x="20" y="200" fill="#f59e0b" font-size="11">[2026-04-03T09:00:05Z] [INFO] [portfolio]   [HIGH] Flash Trade | $1,000 → est $3,600 (3.6x) | Low competition, Q3 TGE target</text>
+  <text x="20" y="215" fill="#aaa" font-size="11">[2026-04-03T09:00:05Z] [INFO] [portfolio]   [MED] Aerodrome | $800 → est $2,160 (2.7x) | veAERO LP rewards on Base</text>
+  <text x="20" y="230" fill="#aaa" font-size="11">[2026-04-03T09:00:05Z] [INFO] [portfolio]   [MED] Drift Protocol | $300 → est $1,080 (3.6x) | Small allocation, perps volume</text>
+
+  <rect x="0" y="246" width="720" height="1" fill="#1a1a2e"/>
+
+  <text x="20" y="264" fill="#666" font-size="11">[2026-04-03T09:00:05Z] [INFO] [nova] ─── Portfolio Summary ────────────────────────────</text>
+  <text x="20" y="279" fill="#f59e0b" font-size="11">[2026-04-03T09:00:05Z] [INFO] [nova] Capital: $4,800 | Expected: $18,360 | ROI: 3.8x</text>
+  <text x="20" y="294" fill="#aaa" font-size="11">[2026-04-03T09:00:05Z] [INFO] [nova] Top campaigns: Kamino Finance, MarginFi, Flash Trade</text>
+  <text x="20" y="309" fill="#555" font-size="11">[2026-04-03T09:00:05Z] [INFO] [nova] Concentrated on Solana lending protocols with high TVL and funded teams.</text>
+
+  <text x="20" y="331" fill="#555" font-size="11">[2026-04-04T09:00:00Z] [INFO] [nova] ─── Farming plan refresh ─────────────────────────</text>
+  <text x="20" y="346" fill="#aaa" font-size="11">[2026-04-04T09:00:02Z] [INFO] [nova] Found 6 active campaigns (1 new: SolFi Lending)</text>
+  <text x="20" y="361" fill="#27c93f" font-size="11">[2026-04-04T09:00:06Z] [INFO] [nova] New high-priority campaign detected: SolFi Lending | est $2,800 (4.2x)</text>
+
+  <text x="20" y="378" fill="#444" font-size="12">$</text>
+  <rect x="32" y="368" width="8" height="14" fill="#f59e0b" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;0;0.8" dur="1.2s" repeatCount="indefinite"/>
+  </rect>
+</svg>
