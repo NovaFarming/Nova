@@ -1,0 +1,103 @@
+<svg width="720" height="450" viewBox="0 0 720 450" xmlns="http://www.w3.org/2000/svg" font-family="'Cascadia Code','Fira Code','Courier New',monospace">
+  <rect width="720" height="450" rx="10" fill="#090912"/>
+  <rect width="720" height="48" rx="10" fill="#0f0f20"/>
+  <rect y="32" width="720" height="16" fill="#0f0f20"/>
+  <text x="20" y="30" fill="#f59e0b" font-size="16" font-weight="bold">✦ NOVA</text>
+  <text x="72" y="30" fill="#555" font-size="12">airdrop farming optimizer</text>
+  <text x="518" y="30" fill="#27c93f" font-size="11">● ACTIVE PLAN</text>
+  <text x="612" y="30" fill="#555" font-size="11">$5,000 capital</text>
+
+  <!-- stat cards -->
+  <rect x="16" y="64" width="154" height="68" rx="6" fill="#111120" stroke="#1e1e3a" stroke-width="1"/>
+  <text x="28" y="82" fill="#555" font-size="10">CAMPAIGNS TRACKED</text>
+  <text x="28" y="108" fill="#e0e0e0" font-size="26" font-weight="bold">5</text>
+  <text x="28" y="122" fill="#555" font-size="10">3 chains</text>
+
+  <rect x="182" y="64" width="154" height="68" rx="6" fill="#111120" stroke="#1e1e3a" stroke-width="1"/>
+  <text x="194" y="82" fill="#555" font-size="10">CAPITAL DEPLOYED</text>
+  <text x="194" y="108" fill="#e0e0e0" font-size="26" font-weight="bold">$4,800</text>
+  <text x="194" y="122" fill="#555" font-size="10">$200 reserve</text>
+
+  <rect x="348" y="64" width="154" height="68" rx="6" fill="#111120" stroke="#1e1e3a" stroke-width="1"/>
+  <text x="360" y="82" fill="#555" font-size="10">EXPECTED AIRDROPS</text>
+  <text x="360" y="108" fill="#f59e0b" font-size="26" font-weight="bold">$18,400</text>
+  <text x="360" y="122" fill="#f59e0b" font-size="10">3.8x blended ROI</text>
+
+  <rect x="514" y="64" width="190" height="68" rx="6" fill="#111120" stroke="#1e1e3a" stroke-width="1"/>
+  <text x="526" y="82" fill="#555" font-size="10">NEXT SNAPSHOT</text>
+  <text x="526" y="102" fill="#e0e0e0" font-size="20" font-weight="bold">~14 days</text>
+  <text x="526" y="122" fill="#555" font-size="10">Kamino Season 2</text>
+
+  <!-- allocations -->
+  <text x="20" y="158" fill="#444" font-size="10">FARMING ALLOCATIONS</text>
+  <rect x="16" y="164" width="688" height="1" fill="#1a1a2e"/>
+
+  <text x="28" y="182" fill="#444" font-size="10">PROTOCOL</text>
+  <text x="170" y="182" fill="#444" font-size="10">CHAIN</text>
+  <text x="238" y="182" fill="#444" font-size="10">CAPITAL</text>
+  <text x="318" y="182" fill="#444" font-size="10">EST. AIRDROP</text>
+  <text x="428" y="182" fill="#444" font-size="10">ROI</text>
+  <text x="490" y="182" fill="#444" font-size="10">ACTIVITIES</text>
+  <text x="640" y="182" fill="#444" font-size="10">PRIORITY</text>
+
+  <!-- kamino -->
+  <rect x="16" y="188" width="688" height="32" rx="3" fill="#1a150a"/>
+  <text x="28" y="208" fill="#f59e0b" font-size="11" font-weight="bold">Kamino Finance</text>
+  <text x="170" y="208" fill="#aaa" font-size="11">solana</text>
+  <text x="238" y="208" fill="#e0e0e0" font-size="11">$1,500</text>
+  <text x="318" y="208" fill="#f59e0b" font-size="11">$7,200</text>
+  <text x="428" y="208" fill="#27c93f" font-size="11">4.8x</text>
+  <text x="490" y="208" fill="#aaa" font-size="10">lp, borrow, stake</text>
+  <text x="640" y="208" fill="#f59e0b" font-size="10">● HIGH</text>
+
+  <!-- marginfi -->
+  <rect x="16" y="224" width="688" height="32" rx="3" fill="#111120"/>
+  <text x="28" y="244" fill="#e0e0e0" font-size="11" font-weight="bold">MarginFi</text>
+  <text x="170" y="244" fill="#aaa" font-size="11">solana</text>
+  <text x="238" y="244" fill="#e0e0e0" font-size="11">$1,200</text>
+  <text x="318" y="244" fill="#f59e0b" font-size="11">$4,320</text>
+  <text x="428" y="244" fill="#27c93f" font-size="11">3.6x</text>
+  <text x="490" y="244" fill="#aaa" font-size="10">borrow, lp</text>
+  <text x="640" y="244" fill="#f59e0b" font-size="10">● HIGH</text>
+
+  <!-- flash -->
+  <rect x="16" y="260" width="688" height="32" rx="3" fill="#1a150a"/>
+  <text x="28" y="280" fill="#e0e0e0" font-size="11" font-weight="bold">Flash Trade</text>
+  <text x="170" y="280" fill="#aaa" font-size="11">solana</text>
+  <text x="238" y="280" fill="#e0e0e0" font-size="11">$1,000</text>
+  <text x="318" y="280" fill="#f59e0b" font-size="11">$3,600</text>
+  <text x="428" y="280" fill="#27c93f" font-size="11">3.6x</text>
+  <text x="490" y="280" fill="#aaa" font-size="10">swap</text>
+  <text x="640" y="280" fill="#f59e0b" font-size="10">● HIGH</text>
+
+  <!-- aerodrome -->
+  <rect x="16" y="296" width="688" height="32" rx="3" fill="#111120"/>
+  <text x="28" y="316" fill="#e0e0e0" font-size="11" font-weight="bold">Aerodrome</text>
+  <text x="170" y="316" fill="#aaa" font-size="11">base</text>
+  <text x="238" y="316" fill="#e0e0e0" font-size="11">$800</text>
+  <text x="318" y="316" fill="#aaa" font-size="11">$2,160</text>
+  <text x="428" y="316" fill="#aaa" font-size="11">2.7x</text>
+  <text x="490" y="316" fill="#aaa" font-size="10">lp, vote</text>
+  <text x="640" y="316" fill="#aaa" font-size="10">● MED</text>
+
+  <!-- drift -->
+  <rect x="16" y="332" width="688" height="32" rx="3" fill="#1a150a"/>
+  <text x="28" y="352" fill="#aaa" font-size="11" font-weight="bold">Drift Protocol</text>
+  <text x="170" y="352" fill="#aaa" font-size="11">solana</text>
+  <text x="238" y="352" fill="#e0e0e0" font-size="11">$300</text>
+  <text x="318" y="352" fill="#aaa" font-size="11">$1,080</text>
+  <text x="428" y="352" fill="#aaa" font-size="11">3.6x</text>
+  <text x="490" y="352" fill="#aaa" font-size="10">swap, lp</text>
+  <text x="640" y="352" fill="#aaa" font-size="10">● MED</text>
+
+  <!-- totals -->
+  <rect x="16" y="378" width="688" height="1" fill="#1a1a2e"/>
+  <text x="28" y="398" fill="#555" font-size="10">TOTAL</text>
+  <text x="238" y="398" fill="#e0e0e0" font-size="11" font-weight="bold">$4,800</text>
+  <text x="318" y="398" fill="#f59e0b" font-size="11" font-weight="bold">$18,360</text>
+  <text x="428" y="398" fill="#27c93f" font-size="11" font-weight="bold">3.8x</text>
+
+  <rect x="0" y="420" width="720" height="30" rx="4" fill="#090912"/>
+  <text x="20" y="438" fill="#333" font-size="10">refreshes daily · estimates based on tvl share and historical distributions</text>
+  <text x="680" y="438" fill="#333" font-size="10">v0.1.0</text>
+</svg>
