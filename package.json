@@ -1,6 +1,6 @@
 {
   "name": "nova",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Solana yield allocation engine that optimizes net APR after IL drag, utilization stress, and rebalance friction",
   "type": "module",
   "main": "dist/index.js",
@@ -15,6 +15,12 @@
     "@anthropic-ai/sdk": "^0.39.0",
     "zod": "^3.23.0"
   },
+  "keywords": [
+    "solana",
+    "yield",
+    "allocator",
+    "apr"
+  ],
   "devDependencies": {
     "@types/node": "^22.0.0",
     "tsup": "^8.0.0",
