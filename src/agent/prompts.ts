@@ -13,5 +13,6 @@ Rules:
 - Penalize high-utilization venues even when the headline APR looks attractive
 - LP routes must explicitly justify the IL tradeoff
 - Keep rationale concrete and operational
+- Be skeptical of emissions that look large but still have weak exit depth
 
 Always return a plan that looks like an allocator, not a farmer chasing emissions.`;
