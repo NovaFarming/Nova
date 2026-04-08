@@ -4,33 +4,33 @@
   <text x="74" y="88" fill="#2a3942" font-size="34" font-family="Arial">Nova // Yield Allocator Schematic</text>
   <text x="74" y="120" fill="#6b756f" font-size="16" font-family="Arial">capital routing across lending, loops, vaults, and DLMM liquidity</text>
 
-  <rect x="84" y="188" width="180" height="114" rx="18" fill="#ffffff" stroke="#bfd0d2"/>
+  <rect x="84" y="188" width="196" height="114" rx="18" fill="#ffffff" stroke="#bfd0d2"/>
   <text x="110" y="230" fill="#40555f" font-size="18" font-family="Arial">Stablecoin Pool</text>
-  <text x="110" y="264" fill="#768690" font-size="14" font-family="Arial">$10,000 deployable capital</text>
+  <text x="110" y="264" fill="#768690" font-size="13" font-family="Arial">$10,000 deployable capital</text>
 
-  <rect x="340" y="132" width="220" height="124" rx="18" fill="#e9f3f6" stroke="#9ab7c1"/>
+  <rect x="324" y="132" width="238" height="124" rx="18" fill="#e9f3f6" stroke="#9ab7c1"/>
   <text x="368" y="174" fill="#40555f" font-size="18" font-family="Arial">Net APR Model</text>
   <text x="368" y="208" fill="#768690" font-size="14" font-family="Arial">fee + emissions + carry</text>
   <text x="368" y="232" fill="#768690" font-size="14" font-family="Arial">- borrow - IL - utilization</text>
 
-  <rect x="340" y="306" width="220" height="124" rx="18" fill="#eaf4ec" stroke="#9fc0a4"/>
+  <rect x="324" y="306" width="238" height="124" rx="18" fill="#eaf4ec" stroke="#9fc0a4"/>
   <text x="368" y="348" fill="#40555f" font-size="18" font-family="Arial">Route Quality Filter</text>
-  <text x="368" y="382" fill="#768690" font-size="14" font-family="Arial">exit depth, utilization cap, concentration</text>
+  <text x="368" y="382" fill="#768690" font-size="13" font-family="Arial">exit depth, util cap, concentration</text>
 
-  <rect x="640" y="100" width="232" height="118" rx="18" fill="#ffffff" stroke="#c6d0d6"/>
+  <rect x="638" y="100" width="244" height="118" rx="18" fill="#ffffff" stroke="#c6d0d6"/>
   <text x="668" y="142" fill="#40555f" font-size="18" font-family="Arial">Kamino SOL lending</text>
   <text x="668" y="176" fill="#2f7a58" font-size="16" font-family="Arial">8.30% net APR</text>
   <text x="668" y="202" fill="#768690" font-size="14" font-family="Arial">util 74% | depth $5.4m</text>
 
-  <rect x="640" y="254" width="232" height="118" rx="18" fill="#ffffff" stroke="#c6d0d6"/>
+  <rect x="638" y="254" width="244" height="118" rx="18" fill="#ffffff" stroke="#c6d0d6"/>
   <text x="668" y="296" fill="#40555f" font-size="18" font-family="Arial">MarginFi USDC loop</text>
   <text x="668" y="330" fill="#2f7a58" font-size="16" font-family="Arial">5.60% net APR</text>
   <text x="668" y="356" fill="#768690" font-size="14" font-family="Arial">carry route | low vol</text>
 
-  <rect x="640" y="408" width="232" height="118" rx="18" fill="#ffffff" stroke="#c6d0d6"/>
-  <text x="668" y="450" fill="#40555f" font-size="18" font-family="Arial">Meteora SOL/USDC DLMM</text>
-  <text x="668" y="484" fill="#c1684d" font-size="16" font-family="Arial">flagged: IL drag rising</text>
-  <text x="668" y="510" fill="#768690" font-size="14" font-family="Arial">fee-rich, but vol-sensitive</text>
+  <rect x="620" y="408" width="262" height="118" rx="18" fill="#ffffff" stroke="#c6d0d6"/>
+  <text x="646" y="450" fill="#40555f" font-size="17" font-family="Arial">Meteora SOL/USDC DLMM</text>
+  <text x="646" y="484" fill="#c1684d" font-size="15" font-family="Arial">flagged: IL drag rising</text>
+  <text x="646" y="510" fill="#768690" font-size="13" font-family="Arial">fee-rich, but vol-sensitive</text>
 
   <rect x="930" y="176" width="178" height="292" rx="20" fill="#29343b"/>
   <text x="956" y="214" fill="#f3f3ef" font-size="18" font-family="Arial">Planner</text>
@@ -40,12 +40,12 @@
   <text x="956" y="376" fill="#86c3af" font-size="15" font-family="Arial">weighted net APR 7.1%</text>
   <text x="956" y="410" fill="#86c3af" font-size="15" font-family="Arial">annualized yield $710</text>
 
-  <line x1="264" y1="244" x2="340" y2="194" stroke="#8a9ca8" stroke-width="6"/>
-  <line x1="264" y1="244" x2="340" y2="368" stroke="#8a9ca8" stroke-width="6"/>
-  <line x1="560" y1="194" x2="640" y2="160" stroke="#8a9ca8" stroke-width="6"/>
-  <line x1="560" y1="194" x2="640" y2="314" stroke="#8a9ca8" stroke-width="6"/>
-  <line x1="560" y1="368" x2="640" y2="466" stroke="#8a9ca8" stroke-width="6"/>
-  <line x1="872" y1="160" x2="930" y2="220" stroke="#8a9ca8" stroke-width="6"/>
-  <line x1="872" y1="314" x2="930" y2="314" stroke="#8a9ca8" stroke-width="6"/>
-  <line x1="872" y1="466" x2="930" y2="408" stroke="#8a9ca8" stroke-width="6"/>
+  <line x1="280" y1="244" x2="324" y2="194" stroke="#8a9ca8" stroke-width="6"/>
+  <line x1="280" y1="244" x2="324" y2="368" stroke="#8a9ca8" stroke-width="6"/>
+  <line x1="562" y1="194" x2="638" y2="160" stroke="#8a9ca8" stroke-width="6"/>
+  <line x1="562" y1="194" x2="638" y2="314" stroke="#8a9ca8" stroke-width="6"/>
+  <line x1="562" y1="368" x2="620" y2="466" stroke="#8a9ca8" stroke-width="6"/>
+  <line x1="882" y1="160" x2="930" y2="220" stroke="#8a9ca8" stroke-width="6"/>
+  <line x1="882" y1="314" x2="930" y2="314" stroke="#8a9ca8" stroke-width="6"/>
+  <line x1="882" y1="466" x2="930" y2="408" stroke="#8a9ca8" stroke-width="6"/>
 </svg>
