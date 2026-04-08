@@ -31,4 +31,9 @@ describe("getCampaignsByChain", () => {
     const meteora = getCampaignsByChain("meteora");
     expect(meteora.every((venue) => venue.protocol === "meteora")).toBe(true);
   });
+
+  it("returns the lending routes for Kamino explicitly", () => {
+    const kamino = getCampaignsByChain("kamino");
+    expect(kamino.length).toBeGreaterThan(0);
+  });
 });
