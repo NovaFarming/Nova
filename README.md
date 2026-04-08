@@ -17,6 +17,7 @@ Optimizes net APR after IL drag, utilization stress, borrow carry, and rebalance
 Chasing headline APR is how allocators end up long emissions they cannot exit, overexposed to high-utilization lending books, or stuck inside LP routes with invisible IL drag. The job is not to farm the biggest number. The job is to route capital into the cleanest net carry after friction.
 
 `Nova` maintains a registry of live Solana yield routes, decomposes gross APR into fee APR, emissions APR, lending carry, borrow cost, IL drag, and utilization penalty, then asks a Claude agent to assemble a concentration-aware rebalance plan.
+The allocator is intentionally conservative around emissions that cannot be exited cleanly.
 
 `SCAN -> DECOMPOSE -> FILTER -> ALLOCATE -> REBALANCE`
 

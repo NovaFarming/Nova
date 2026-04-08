@@ -7,3 +7,5 @@ The current IL drag estimate needs a stronger volatility shock term. Otherwise t
 ## Need post-trade utilization checks before large stablecoin rotations
 
 We are scoring routes using current utilization, but not projected utilization after deployment. Add a post-trade cap before the agent can approve a move.
+
+Backlog note: validate both issues against actual Meteora and lending route exits before changing the allocator defaults.

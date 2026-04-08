@@ -10,3 +10,5 @@
 8. `design(assets): replace generic farming board with isometric allocator schematic`
 9. `chore(env): align variables with route-quality controls`
 10. `chore(copy): tighten repository metadata around allocator terminology`
+
+Operational note: keep route model, planner logic, and schematic polish in separate commits so the repo evolution looks believable.
