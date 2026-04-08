@@ -23,17 +23,70 @@ The allocator is intentionally conservative around emissions that cannot be exit
 
 ---
 
+Allocation Schematic • Terminal Output • At a Glance • Operating Surfaces • How It Works • Example Output • Technical Spec • Risk Controls • Quick Start
+
+## At a Glance
+
+- `Use case`: route Solana capital into cleaner net carry instead of headline APR
+- `Primary input`: fee APR, emissions APR, lending carry, IL drag, utilization, rebalance friction
+- `Primary failure mode`: allocating into yield that cannot actually be kept
+- `Best for`: operators who care more about realized carry than advertised yield
+
 ## Allocation Schematic
 
 ![Nova Dashboard](assets/preview-dashboard.svg)
-
----
 
 ## Terminal Output
 
 ![Nova Terminal](assets/preview-terminal.svg)
 
----
+## Operating Surfaces
+
+- `Allocation Schematic`: shows how capital is being routed across the active venues
+- `Net APR Model`: exposes the components hidden behind headline yield
+- `Rebalance Planner`: promotes route changes only when the edge clears friction
+- `Terminal Output`: prints the route stack the allocator would actually hold
+
+## Why Nova Exists
+
+Most yield dashboards do not separate gross reward numbers from the frictions that make those numbers misleading. An allocator can easily end up long emissions it cannot exit, pushed into lending books that are already stressed, or carrying IL that quietly erases the headline spread.
+
+Nova exists to force every route through a net-carry lens before it gets capital.
+
+## How It Works
+
+Nova treats allocation as a filtration problem:
+
+1. load live Solana yield routes from the venue registry
+2. break each route into fee carry, emissions, borrow, IL drag, and utilization stress
+3. reject routes where the reward mix is too fragile or too hard to exit
+4. cap concentration so one venue cannot dominate the allocator
+5. propose a rebalance only when the net edge is strong enough to matter after friction
+
+This is why Nova is more conservative than a simple yield board. It is optimizing for keepable yield, not optical APR.
+
+## What A Good Route Looks Like
+
+- gross APR survives after drag and borrow costs are removed
+- utilization is not already stretched
+- emissions can actually be exited into real depth
+- route concentration remains inside the portfolio limits
+
+If those conditions are missing, the route should not absorb capital just because the raw number is large.
+
+## Example Output
+
+```text
+NOVA // ALLOCATION PLAN
+
+lead route         Kamino SOL lending
+net apr            8.30%
+exit depth         strong
+utilization        74%
+portfolio weight   40%
+
+allocation note: carry is clean and friction stays below the rebalance threshold
+```
 
 ## Technical Spec
 
@@ -55,7 +108,14 @@ Allocation rules:
 - keep capital concentration below `MAX_PROTOCOL_WEIGHT`
 - LP routes must justify IL drag relative to carry
 
----
+## Risk Controls
+
+- `utilization cap`: blocks routes where post-trade utilization becomes too stressed
+- `exit-depth filter`: blocks rewards that cannot be exited cleanly
+- `concentration cap`: prevents one protocol from dominating the allocator
+- `friction-aware rebalance`: rejects route changes that do not clear real costs
+
+Nova should under-rotate rather than overtrade into noisy yield.
 
 ## Architecture
 
@@ -66,8 +126,6 @@ venue registry
   -> portfolio summary and route board
 ```
 
----
-
 ## Quick Start
 
 ```bash
@@ -76,8 +134,6 @@ cd Nova && bun install
 cp .env.example .env
 bun run dev
 ```
-
----
 
 ## Configuration
 
@@ -90,14 +146,10 @@ MIN_EXIT_DEPTH_USD=25000
 MAX_PROTOCOL_WEIGHT=0.45
 ```
 
----
-
 ## Legitimacy Notes
 
 - Planned commit sequence: [`docs/commit-sequence.md`](docs/commit-sequence.md)
 - Draft engineering issues: [`docs/issue-drafts.md`](docs/issue-drafts.md)
-
----
 
 ## License
 
