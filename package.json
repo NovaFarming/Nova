@@ -1,7 +1,7 @@
 {
   "name": "nova",
   "version": "0.1.0",
-  "description": "Autonomous airdrop farming optimizer — tracks live campaigns, estimates expected value, and allocates capital with Claude",
+  "description": "Solana yield allocation engine that optimizes net APR after IL drag, utilization stress, and rebalance friction",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

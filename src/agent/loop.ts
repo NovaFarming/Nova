@@ -1,21 +1,44 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { config } from "../lib/config.js";
 import { createLogger } from "../lib/logger.js";
-import type { Campaign, FarmingPlan, CampaignAllocation } from "../lib/types.js";
+import type { YieldVenue, RebalancePlan, YieldAllocation } from "../lib/types.js";
 import { NOVA_SYSTEM } from "./prompts.js";
 
 const logger = createLogger("agent");
 const client = new Anthropic({ apiKey: config.ANTHROPIC_API_KEY });
 
+function inferIlDrag(venue: YieldVenue): number {
+  if (!venue.ilExposure || !venue.pairPriceRatio) return 0;
+  const ratio = venue.pairPriceRatio;
+  const il = (2 * Math.sqrt(ratio)) / (1 + ratio) - 1;
+  const annualized = Math.abs(il) * Math.min(1.5, venue.volatility30d);
+  return Number(annualized.toFixed(4));
+}
+
+function netApr(venue: YieldVenue): number {
+  const ilDrag = inferIlDrag(venue);
+  const utilizationPenalty = venue.utilization > 0.7 ? ((venue.utilization - 0.7) / 0.2) * 0.04 : 0;
+  return Number(
+    (
+      venue.feeApr +
+      venue.emissionApr +
+      venue.lendingCarryApr -
+      venue.borrowApr -
+      ilDrag -
+      utilizationPenalty
+    ).toFixed(4),
+  );
+}
+
 const tools: Anthropic.Tool[] = [
   {
     name: "get_active_campaigns",
-    description: "Returns all currently active airdrop campaigns with estimated values",
+    description: "Returns all live yield routes with carry, utilization, IL, and exit-depth data",
     input_schema: { type: "object" as const, properties: {}, required: [] },
   },
   {
     name: "get_campaign_details",
-    description: "Returns full details for a specific campaign including eligibility requirements",
+    description: "Returns full detail for a specific venue including net APR components",
     input_schema: {
       type: "object" as const,
       properties: { campaignId: { type: "string" } },
@@ -24,20 +47,19 @@ const tools: Anthropic.Tool[] = [
   },
   {
     name: "estimate_airdrop_value",
-    description: "Estimates expected airdrop value given a capital allocation and activity level",
+    description: "Estimate annualized net yield for a capital allocation after friction",
     input_schema: {
       type: "object" as const,
       properties: {
         campaignId: { type: "string" },
         capitalUsd: { type: "number" },
-        activityMultiplier: { type: "number" }, // 1.0 = baseline, 2.0 = heavy activity
       },
       required: ["campaignId", "capitalUsd"],
     },
   },
   {
     name: "submit_farming_plan",
-    description: "Submit the complete farming plan with all allocations",
+    description: "Submit the complete rebalance plan with all allocations",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -46,33 +68,34 @@ const tools: Anthropic.Tool[] = [
           items: {
             type: "object",
             properties: {
-              campaignId: { type: "string" },
+              venueId: { type: "string" },
               protocol: { type: "string" },
+              market: { type: "string" },
               capitalUsd: { type: "number" },
-              activitiesRequired: { type: "array", items: { type: "string" } },
-              estimatedAirdropUsd: { type: "number" },
-              roi: { type: "number" },
+              expectedNetApr: { type: "number" },
+              expectedNetYieldUsd: { type: "number" },
+              protocolWeight: { type: "number" },
               priority: { type: "string", enum: ["high", "medium", "low"] },
-              rationale: { type: "string" },
-            },
-          },
+              rationale: { type: "string" }
+            }
+          }
         },
-        summary: { type: "string" },
+        summary: { type: "string" }
       },
       required: ["allocations", "summary"],
     },
   },
 ];
 
-export async function buildFarmingPlan(campaigns: Campaign[]): Promise<FarmingPlan | null> {
+export async function buildFarmingPlan(venues: YieldVenue[]): Promise<RebalancePlan | null> {
   const messages: Anthropic.MessageParam[] = [
     {
       role: "user",
-      content: `Build an optimal airdrop farming plan for $${config.TOTAL_CAPITAL_USD.toLocaleString()} total capital. ${campaigns.length} active campaigns available. Maximize expected airdrop value while maintaining ROI > ${config.MIN_ROI}x.`,
+      content: `Build a Solana yield allocation plan for $${config.TOTAL_CAPITAL_USD.toLocaleString()} of capital. Favor routes above ${(config.MIN_NET_APR * 100).toFixed(1)}% net APR while respecting utilization and protocol concentration limits.`,
     },
   ];
 
-  let plan: FarmingPlan | null = null;
+  let plan: RebalancePlan | null = null;
 
   for (let i = 0; i < 10; i++) {
     const response = await client.messages.create({
@@ -95,55 +118,57 @@ export async function buildFarmingPlan(campaigns: Campaign[]): Promise<FarmingPl
 
       switch (block.name) {
         case "get_active_campaigns":
-          result = campaigns.map((c) => ({
-            id: c.id,
-            protocol: c.protocol,
-            chain: c.chain,
-            estimatedValueUsd: c.estimatedValueUsd,
-            requiredActivities: c.requiredActivities,
-            tvlUsd: c.tvlUsd,
-            fundingUsd: c.fundingUsd,
-            pointsSystem: c.pointsSystem,
+          result = venues.map((venue) => ({
+            id: venue.id,
+            protocol: venue.protocol,
+            market: venue.market,
+            strategyType: venue.strategyType,
+            utilization: venue.utilization,
+            availableLiquidityUsd: venue.availableLiquidityUsd,
+            rewardExitDepthUsd: venue.rewardExitDepthUsd,
+            ilDragApr: inferIlDrag(venue),
+            netApr: netApr(venue),
           }));
           break;
 
         case "get_campaign_details": {
           const input = block.input as { campaignId: string };
-          const campaign = campaigns.find((c) => c.id === input.campaignId);
-          result = campaign ?? { error: "campaign not found" };
+          const venue = venues.find((candidate) => candidate.id === input.campaignId);
+          result = venue
+            ? {
+                ...venue,
+                ilDragApr: inferIlDrag(venue),
+                netApr: netApr(venue),
+              }
+            : { error: "venue not found" };
           break;
         }
 
         case "estimate_airdrop_value": {
-          const input = block.input as { campaignId: string; capitalUsd: number; activityMultiplier?: number };
-          const campaign = campaigns.find((c) => c.id === input.campaignId);
-          if (!campaign || !campaign.estimatedValueUsd) {
-            result = { estimatedAirdropUsd: 0, note: "insufficient data to estimate" };
+          const input = block.input as { campaignId: string; capitalUsd: number };
+          const venue = venues.find((candidate) => candidate.id === input.campaignId);
+          if (!venue) {
+            result = { expectedNetYieldUsd: 0, expectedNetApr: 0, note: "venue missing" };
           } else {
-            const multiplier = input.activityMultiplier ?? 1.0;
-            const base = campaign.estimatedValueUsd;
-            const capitalFactor = Math.min(input.capitalUsd / 1000, 2.0);
-            const estimated = base * capitalFactor * multiplier * 0.6; // 60% probability weight
+            const expectedNetApr = netApr(venue);
+            const friction = config.REBALANCE_COST_USD / Math.max(input.capitalUsd, 1);
+            const adjustedApr = Math.max(0, expectedNetApr - friction);
             result = {
-              estimatedAirdropUsd: Math.round(estimated),
-              roi: estimated / input.capitalUsd,
-              note: "estimate based on TVL share and historical airdrop distributions",
+              expectedNetApr: Number(adjustedApr.toFixed(4)),
+              expectedNetYieldUsd: Math.round(input.capitalUsd * adjustedApr),
             };
           }
           break;
         }
 
         case "submit_farming_plan": {
-          const input = block.input as { allocations: CampaignAllocation[]; summary: string };
-          const total = input.allocations.reduce((s, a) => s + a.estimatedAirdropUsd, 0);
+          const input = block.input as { allocations: YieldAllocation[]; summary: string };
           plan = {
             generatedAt: Date.now(),
             totalCapital: config.TOTAL_CAPITAL_USD,
             allocations: input.allocations,
-            expectedTotalAirdropUsd: total,
-            topCampaigns: input.allocations
-              .filter((a) => a.priority === "high")
-              .map((a) => a.protocol),
+            expectedAnnualYieldUsd: input.allocations.reduce((sum, allocation) => sum + allocation.expectedNetYieldUsd, 0),
+            topRoutes: input.allocations.filter((allocation) => allocation.priority === "high").map((allocation) => allocation.market),
             summary: input.summary,
           };
           result = { accepted: true };

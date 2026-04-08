@@ -7,14 +7,14 @@ import { applyPlan, getPortfolioSummary } from "./src/tracker/portfolio.js";
 const logger = createLogger("nova");
 
 async function refresh() {
-  logger.info("─── Farming plan refresh ─────────────────────────");
+  logger.info("---------------- Yield Refresh ------------");
 
-  const campaigns = getActiveCampaigns();
-  logger.info(`Found ${campaigns.length} active campaigns`);
+  const venues = getActiveCampaigns();
+  logger.info(`Found ${venues.length} live yield routes`);
 
-  const plan = await buildFarmingPlan(campaigns);
+  const plan = await buildFarmingPlan(venues);
   if (!plan) {
-    logger.warn("Agent returned no farming plan");
+    logger.warn("Agent returned no rebalance plan");
     return;
   }
 
@@ -22,16 +22,20 @@ async function refresh() {
 
   const summary = getPortfolioSummary();
   if (summary) {
-    logger.info(`─── Portfolio Summary ────────────────────────────`);
-    logger.info(`Capital: $${summary.totalCapital.toLocaleString()} | Expected: $${summary.totalExpected.toLocaleString()} | ROI: ${summary.blendedRoi.toFixed(1)}x`);
-    logger.info(`Top campaigns: ${summary.topCampaigns.join(", ")}`);
+    logger.info("---------------- Portfolio Summary --------");
+    logger.info(
+      `Capital: $${summary.totalCapital.toLocaleString()} | Annualized yield: $${summary.expectedAnnualYieldUsd.toLocaleString()} | Weighted net APR: ${(summary.weightedNetApr * 100).toFixed(2)}%`,
+    );
+    logger.info(`Top routes: ${summary.topRoutes.join(", ")}`);
     logger.info(summary.summary);
   }
 }
 
 async function main() {
   logger.info("Nova starting...");
-  logger.info(`Capital: $${config.TOTAL_CAPITAL_USD.toLocaleString()} | Min ROI: ${config.MIN_ROI}x | Refresh: ${config.REFRESH_INTERVAL_MS / 3600000}h`);
+  logger.info(
+    `Capital: $${config.TOTAL_CAPITAL_USD.toLocaleString()} | Min net APR: ${(config.MIN_NET_APR * 100).toFixed(1)}% | Refresh: ${config.REFRESH_INTERVAL_MS / 3600000}h`,
+  );
 
   await refresh();
   setInterval(refresh, config.REFRESH_INTERVAL_MS);
