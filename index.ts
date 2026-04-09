@@ -10,7 +10,7 @@ async function refresh() {
   logger.info("---------------- Yield Refresh ------------");
 
   const venues = getActiveCampaigns();
-  logger.info(`Found ${venues.length} live yield routes after route-quality screening`);
+  logger.info(`Found ${venues.length} tracked yield routes after route-quality screening`);
 
   const plan = await buildFarmingPlan(venues);
   if (!plan) {

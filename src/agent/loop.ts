@@ -30,10 +30,15 @@ function netApr(venue: YieldVenue): number {
   );
 }
 
+function estimatePostTradeUtilization(venue: YieldVenue, capitalUsd: number): number {
+  const effectiveCapacity = venue.availableLiquidityUsd / Math.max(1 - venue.utilization, 0.05);
+  return Number(Math.min(0.995, (venue.utilization * effectiveCapacity + capitalUsd) / effectiveCapacity).toFixed(4));
+}
+
 const tools: Anthropic.Tool[] = [
   {
     name: "get_active_campaigns",
-    description: "Returns all live yield routes with carry, utilization, IL, and exit-depth data",
+    description: "Returns all reviewed yield routes with carry, utilization, IL, and exit-depth data",
     input_schema: { type: "object" as const, properties: {}, required: [] },
   },
   {
@@ -46,8 +51,8 @@ const tools: Anthropic.Tool[] = [
     },
   },
   {
-    name: "estimate_airdrop_value",
-    description: "Estimate annualized net yield for a capital allocation after friction",
+    name: "estimate_net_yield",
+    description: "Estimate annualized net yield for a reviewed capital allocation after friction and utilization stress",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -123,6 +128,10 @@ export async function buildFarmingPlan(venues: YieldVenue[]): Promise<RebalanceP
             protocol: venue.protocol,
             market: venue.market,
             strategyType: venue.strategyType,
+            dataSource: venue.dataSource,
+            lastReviewedAt: venue.lastReviewedAt,
+            maxRecommendedCapitalUsd: venue.maxRecommendedCapitalUsd,
+            reviewNotes: venue.reviewNotes,
             utilization: venue.utilization,
             availableLiquidityUsd: venue.availableLiquidityUsd,
             rewardExitDepthUsd: venue.rewardExitDepthUsd,
@@ -139,23 +148,28 @@ export async function buildFarmingPlan(venues: YieldVenue[]): Promise<RebalanceP
                 ...venue,
                 ilDragApr: inferIlDrag(venue),
                 netApr: netApr(venue),
+                postTradeUtilizationAtCap: estimatePostTradeUtilization(venue, venue.maxRecommendedCapitalUsd),
               }
             : { error: "venue not found" };
           break;
         }
 
-        case "estimate_airdrop_value": {
+        case "estimate_net_yield": {
           const input = block.input as { campaignId: string; capitalUsd: number };
           const venue = venues.find((candidate) => candidate.id === input.campaignId);
           if (!venue) {
             result = { expectedNetYieldUsd: 0, expectedNetApr: 0, note: "venue missing" };
           } else {
+            const capitalCapped = Math.min(input.capitalUsd, venue.maxRecommendedCapitalUsd);
             const expectedNetApr = netApr(venue);
-            const friction = config.REBALANCE_COST_USD / Math.max(input.capitalUsd, 1);
+            const friction = config.REBALANCE_COST_USD / Math.max(capitalCapped, 1);
             const adjustedApr = Math.max(0, expectedNetApr - friction);
+            const postTradeUtilization = estimatePostTradeUtilization(venue, capitalCapped);
             result = {
-              expectedNetApr: Number(adjustedApr.toFixed(4)),
-              expectedNetYieldUsd: Math.round(input.capitalUsd * adjustedApr),
+              expectedNetApr: Number((postTradeUtilization > config.MAX_POST_TRADE_UTILIZATION ? 0 : adjustedApr).toFixed(4)),
+              expectedNetYieldUsd: Math.round(capitalCapped * adjustedApr),
+              postTradeUtilization,
+              capitalCapped,
             };
           }
           break;
@@ -163,12 +177,59 @@ export async function buildFarmingPlan(venues: YieldVenue[]): Promise<RebalanceP
 
         case "submit_farming_plan": {
           const input = block.input as { allocations: YieldAllocation[]; summary: string };
+          const sanitizedAllocations: YieldAllocation[] = [];
+          const capitalByProtocol = new Map<YieldVenue["protocol"], number>();
+          let remainingCapital = config.TOTAL_CAPITAL_USD;
+
+          for (const allocation of input.allocations) {
+            const venue = venues.find((candidate) => candidate.id === allocation.venueId);
+            if (!venue) continue;
+
+            const capitalUsd = Math.min(allocation.capitalUsd, venue.maxRecommendedCapitalUsd, remainingCapital);
+            const postTradeUtilization = estimatePostTradeUtilization(venue, capitalUsd);
+            const recomputedNetApr = Math.max(
+              0,
+              netApr(venue) - config.REBALANCE_COST_USD / Math.max(capitalUsd, 1),
+            );
+            const nextProtocolCapital = (capitalByProtocol.get(venue.protocol) ?? 0) + capitalUsd;
+            const nextProtocolWeight = nextProtocolCapital / Math.max(config.TOTAL_CAPITAL_USD, 1);
+
+            if (
+              capitalUsd < 250 ||
+              postTradeUtilization > config.MAX_POST_TRADE_UTILIZATION ||
+              recomputedNetApr < config.MIN_NET_APR ||
+              nextProtocolWeight > config.MAX_PROTOCOL_WEIGHT
+            ) {
+              continue;
+            }
+
+            capitalByProtocol.set(venue.protocol, nextProtocolCapital);
+            remainingCapital = Number(Math.max(0, remainingCapital - capitalUsd).toFixed(2));
+
+            sanitizedAllocations.push({
+              ...allocation,
+              capitalUsd,
+              expectedNetApr: Number(recomputedNetApr.toFixed(4)),
+              expectedNetYieldUsd: Math.round(capitalUsd * recomputedNetApr),
+              protocolWeight: 0,
+            });
+
+            if (remainingCapital < 250) break;
+          }
+
+          const allocatedCapital = sanitizedAllocations.reduce((sum, allocation) => sum + allocation.capitalUsd, 0);
+          for (const allocation of sanitizedAllocations) {
+            allocation.protocolWeight = Number(
+              (allocation.capitalUsd / Math.max(allocatedCapital, 1)).toFixed(4),
+            );
+          }
+
           plan = {
             generatedAt: Date.now(),
             totalCapital: config.TOTAL_CAPITAL_USD,
-            allocations: input.allocations,
-            expectedAnnualYieldUsd: input.allocations.reduce((sum, allocation) => sum + allocation.expectedNetYieldUsd, 0),
-            topRoutes: input.allocations.filter((allocation) => allocation.priority === "high").map((allocation) => allocation.market),
+            allocations: sanitizedAllocations,
+            expectedAnnualYieldUsd: sanitizedAllocations.reduce((sum, allocation) => sum + allocation.expectedNetYieldUsd, 0),
+            topRoutes: sanitizedAllocations.filter((allocation) => allocation.priority === "high").map((allocation) => allocation.market),
             summary: input.summary,
           };
           result = { accepted: true };

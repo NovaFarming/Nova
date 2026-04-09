@@ -6,6 +6,10 @@ export interface YieldVenue {
   protocol: Protocol;
   market: string;
   strategyType: StrategyType;
+  dataSource: "registry";
+  lastReviewedAt: string;
+  maxRecommendedCapitalUsd: number;
+  reviewNotes: string;
   feeApr: number;
   emissionApr: number;
   borrowApr: number;
