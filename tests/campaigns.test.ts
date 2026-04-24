@@ -6,6 +6,13 @@ describe("getActiveCampaigns", () => {
     expect(getActiveCampaigns().length).toBeGreaterThan(0);
   });
 
+  it("returns a defensive copy of the registry", () => {
+    const campaigns = getActiveCampaigns();
+    const originalLength = campaigns.length;
+    campaigns.pop();
+    expect(getActiveCampaigns()).toHaveLength(originalLength);
+  });
+
   it("all venues expose liquidity and utilization data", () => {
     for (const venue of getActiveCampaigns()) {
       expect(venue.availableLiquidityUsd).toBeGreaterThan(0);
@@ -42,5 +49,11 @@ describe("getCampaignsByProtocol", () => {
   it("returns the lending routes for Kamino explicitly", () => {
     const kamino = getCampaignsByProtocol("kamino");
     expect(kamino.length).toBeGreaterThan(0);
+  });
+
+  it("normalizes protocol input before filtering", () => {
+    const kamino = getCampaignsByProtocol(" Kamino ");
+    expect(kamino.length).toBeGreaterThan(0);
+    expect(kamino.every((venue) => venue.protocol === "kamino")).toBe(true);
   });
 });

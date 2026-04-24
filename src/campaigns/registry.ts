@@ -81,7 +81,7 @@ const KNOWN_VENUES: YieldVenue[] = [
 ];
 
 export function getActiveCampaigns(): YieldVenue[] {
-  return KNOWN_VENUES;
+  return [...KNOWN_VENUES];
 }
 
 export function getCampaignById(id: string): YieldVenue | undefined {
@@ -89,5 +89,6 @@ export function getCampaignById(id: string): YieldVenue | undefined {
 }
 
 export function getCampaignsByProtocol(protocol: string): YieldVenue[] {
-  return KNOWN_VENUES.filter((venue) => venue.protocol === protocol);
+  const normalized = protocol.trim().toLowerCase();
+  return KNOWN_VENUES.filter((venue) => venue.protocol === normalized);
 }
