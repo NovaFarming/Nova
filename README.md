@@ -23,7 +23,7 @@ The allocator is intentionally conservative around emissions that cannot be exit
 
 ---
 
-Allocation Schematic • Terminal Output • At a Glance • Operating Surfaces • How It Works • Example Output • Technical Spec • Risk Controls • Quick Start
+Live Allocation Desk • How Nova Allocates • At a Glance • Operating Surfaces • How It Works • Example Output • Technical Spec • Risk Controls • Quick Start
 
 ## At a Glance
 
@@ -32,20 +32,24 @@ Allocation Schematic • Terminal Output • At a Glance • Operating Surfaces 
 - `Primary failure mode`: allocating into yield that cannot actually be kept
 - `Best for`: operators who care more about realized carry than advertised yield
 
-## Allocation Schematic
+## Live Allocation Desk
 
-![Nova Dashboard](assets/preview-dashboard.svg)
+<img src="assets/preview-dashboard.png" alt="Nova live allocation desk" width="100%" />
 
-## Terminal Output
+Live allocation desk for Nova: route registry, APR decomposition, current portfolio, allocation plan, Claude allocation loop, risk controls, and hard gates for keepable Solana yield.
 
-![Nova Terminal](assets/preview-terminal.svg)
+## How Nova Allocates
+
+<img src="assets/preview-allocation.png" alt="Nova allocation workflow" width="100%" />
+
+How Nova allocates: scan route APR, decompose headline yield into carry and drag, filter routes through hard gates, allocate only to keepable net APR, and rebalance only when the edge clears friction.
 
 ## Operating Surfaces
 
-- `Allocation Schematic`: shows how capital is being routed across the active venues
+- `Live Allocation Desk`: shows route decomposition, current portfolio, allocation plan, and enforced risk gates
 - `Net APR Model`: exposes the components hidden behind headline yield
 - `Rebalance Planner`: promotes route changes only when the edge clears friction
-- `Terminal Output`: prints the route stack the allocator would actually hold
+- `How Nova Allocates`: explains why headline APR is filtered before capital is routed
 
 ## Why Nova Exists
 
